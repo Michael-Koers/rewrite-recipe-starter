@@ -15,8 +15,110 @@
  */
 package com.yourorg;
 
+import com.google.errorprone.refaster.annotation.AfterTemplate;
+import com.google.errorprone.refaster.annotation.BeforeTemplate;
+import org.openrewrite.java.template.RecipeDescriptor;
+
 // TODO - This is a placeholder for a Refaster recipe. Implement the recipe by adding before and after annotated methods.
 // The rule should replace calls to `String.length() == 0` with `String.isEmpty()`, as well as similar variants.
 // You're done when all the tests in `StringIsEmptyTest` passes.
+@RecipeDescriptor(
+        name = "Standardize empty String checks",
+        description = "Replace calls to `String.length() == 0` with `String.isEmpty()`."
+)
 public class StringIsEmpty {
+
+    @RecipeDescriptor(
+            name = "String Length Equals Zero",
+            description = "Replace calls to `String.length() == 0` with `String.isEmpty()`."
+    )
+    public static class StringLengthEqualsZero {
+        @BeforeTemplate
+        boolean before(String expr) {
+            return expr.length() == 0;
+        }
+
+        @AfterTemplate
+        boolean after(String expr) {
+            return expr.isEmpty();
+        }
+    }
+
+    @RecipeDescriptor(
+            name = "Zero Equals String Length",
+            description = "Replace calls to `0 == String.length()` with `String.isEmpty()`."
+    )
+    public static class ZeroEqualsStringLength {
+        @BeforeTemplate
+        boolean before(String expr) {
+            return 0 == expr.length();
+        }
+
+        @AfterTemplate
+        boolean after(String expr) {
+            return expr.isEmpty();
+        }
+    }
+
+    @RecipeDescriptor(
+            name = "String Length Smaller Than 1",
+            description = "Replace calls to `String.length() < 1` with `String.isEmpty()`."
+    )
+    public static class StringLengthSmallerThan1 {
+        @BeforeTemplate
+        boolean before(String expr) {
+            return expr.length() < 1;
+        }
+
+        @AfterTemplate
+        boolean after(String expr) {
+            return expr.isEmpty();
+        }
+    }
+
+    @RecipeDescriptor(
+            name = "1 Bigger Than String Length",
+            description = "Replace calls to `1 > String.length()` with `String.isEmpty()`."
+    )
+    public static class OneBiggerThanStringLength {
+        @BeforeTemplate
+        boolean before(String expr) {
+            return 1 > expr.length();
+        }
+
+        @AfterTemplate
+        boolean after(String expr) {
+            return expr.isEmpty();
+        }
+    }
+
+    @RecipeDescriptor(
+            name = "String Length Equals Empty String",
+            description = "Replace calls to `String.equals('')` with `String.isEmpty()`."
+    )
+    public static class StringLengthEqualsEmptyString {
+        @BeforeTemplate
+        boolean before(String expr) {
+            return expr.equals("");
+        }
+
+        @AfterTemplate
+        boolean after(String expr) {
+            return expr.isEmpty();
+        }
+    }
+
+    public static class EmptyStringEqualsStringLength {
+        @BeforeTemplate
+        boolean before(String expr) {
+            return "".equals(expr);
+        }
+
+        @AfterTemplate
+        boolean after(String expr) {
+            return expr.isEmpty();
+        }
+    }
+
+
 }
